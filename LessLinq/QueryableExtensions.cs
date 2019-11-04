@@ -36,11 +36,9 @@ namespace LessLinq
             Expression<Func<T, TProperty>> propertySelector, IEnumerable<TProperty> values)
         {
             if (!values.Any()) return set;
-            if (!(propertySelector.Body is MemberExpression memberExpr))
-                throw new ArgumentException("The propertySelector should be a MemberExpression!", nameof(propertySelector));
 
-            var param = Expression.Parameter(typeof(T));
-            var prop = Expression.Property(param, memberExpr.Member.Name);
+            var param = propertySelector.Parameters[0];
+            var prop = propertySelector.Body;
 
             var body = values
                 .Select(t => Expression.Equal(prop, Expression.Constant(t)))
