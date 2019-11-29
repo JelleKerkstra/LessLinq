@@ -35,17 +35,23 @@ namespace LessLinq
         public static IQueryable<T> With<T, TProperty>(this IQueryable<T> set,
             Expression<Func<T, TProperty>> propertySelector, IEnumerable<TProperty> values)
         {
-            if (!values.Any()) return set;
+            return !values.Any() ? set : set.Where(WithExpression.With(propertySelector, values));
+        }
 
-            var param = propertySelector.Parameters[0];
-            var prop = propertySelector.Body;
-
-            var body = values
-                .Select(t => Expression.Equal(prop, Expression.Constant(t)))
-                .Aggregate(Expression.Or);
-            var predicate = Expression.Lambda<Func<T, bool>>(body, param);
-
-            return set.Where(predicate);
+        /// <summary>
+        /// Filters the queryable by the given values on the selected property on the given path
+        /// </summary>
+        /// <typeparam name="T">Type of sequence.</typeparam>
+        /// <typeparam name="TProperty">Type of the filtered property.</typeparam>
+        /// <param name="set">The queryable on which the filter is to be applied.</param>
+        /// <param name="path">The path on the sequence type on which to apply the predicate.</param>
+        /// <param name="propertySelector">Expression to select the property on the sequence type.</param>
+        /// <param name="values">The values to filter the sequence by.</param>
+        /// <returns>A sequence filtered by the given values on the given property.</returns>
+        public static IQueryable<T> HavingWith<T, TPredicateSource, TProperty>(this IQueryable<T> set,
+            Expression<Func<T, TPredicateSource>> path, Expression<Func<TPredicateSource, TProperty>> propertySelector, IEnumerable<TProperty> values)
+        {
+            return !values.Any() ? set : set.Having(path, WithExpression.With(propertySelector, values));
         }
     }
 }
