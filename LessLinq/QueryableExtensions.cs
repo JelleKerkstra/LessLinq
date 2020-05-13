@@ -35,7 +35,7 @@ namespace LessLinq
         public static IQueryable<T> With<T, TProperty>(this IQueryable<T> set,
             Expression<Func<T, TProperty>> propertySelector, IEnumerable<TProperty> values)
         {
-            return !values.Any() ? set : set.Where(WithExpression.With(propertySelector, values));
+            return !values.Any() ? set.Where(_ => false) : set.Where(WithExpression.With(propertySelector, values));
         }
 
         /// <summary>
