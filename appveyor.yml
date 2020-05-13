@@ -2,13 +2,6 @@ image: Visual Studio 2017
 configuration: Release
 install:
   - choco install gitversion.portable -y
-deploy:
-  provider: environment
-  name: nuget
-  artifact: /.*\.nupkg/
-  on:
-    branch: master
-    appveyor_repo_tag: true
 before_build:
   - cmd: gitversion /l console /output buildserver /updateassemblyinfo
   - nuget restore
