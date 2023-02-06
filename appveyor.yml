@@ -9,6 +9,6 @@ build:
   verbosity: minimal
   project: LessLinq.sln
 after_build:
-  - dotnet pack LessLinq -c %CONFIGURATION% /p:Version=%GitVersion_NuGetVersion% --no-build -o ..\artifacts
+  - dotnet pack LessLinq -c %CONFIGURATION% /p:Version=%GitVersion_NuGetVersion% --no-build -o artifacts
 artifacts:
   - path: artifacts\*.*
